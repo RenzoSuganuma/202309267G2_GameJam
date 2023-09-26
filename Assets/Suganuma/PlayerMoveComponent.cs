@@ -144,6 +144,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <returns></returns>
     IEnumerator CollidedWithObstacleRoutine(float freezTime)
     {
+        Debug.Log("衝突ルーチン開始");
         _isFreez = true;
         this.transform.position += new Vector3(0, 0, -5);
         _rb.velocity = Vector3.zero;
