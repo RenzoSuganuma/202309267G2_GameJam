@@ -9,8 +9,8 @@ namespace Constants
         {
             [SceneNames.Title] = "TitleScene",
             [SceneNames.Home] = "HomeScene",
-            [SceneNames.Matching] = "MatchingRoomScene",
-            [SceneNames.MainGame] = "MainGameScene",
+            [SceneNames.InGame] = "InGameScene",
+            [SceneNames.Result] = "ResultScene"
         };
     }
 }
@@ -20,8 +20,8 @@ public enum SceneNames
 {
     Title,
     Home,
-    Matching,
-    MainGame,
+    InGame,
+    Result,
 }
 
 public enum BGMType
