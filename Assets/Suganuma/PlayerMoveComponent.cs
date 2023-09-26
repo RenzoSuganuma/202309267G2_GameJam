@@ -1,0 +1,167 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(PlayerInputhandlerComponent))]
+/// <summary>プレイヤーの動くためのコンポーネント</summary>
+public class PlayerMoveComponent : MonoBehaviour
+{
+    /// <summary>移動速度</summary>
+    [SerializeField, Header("プレイヤー移動速度")] float _moveSpeed;
+    /// <summary>ジャンプ力</summary>
+    [SerializeField, Header("ジャンプ力")] float _jumpForce;
+    /// <summary>Rigidbodyの速度の上限</summary>
+    [SerializeField, Header("プレイヤー走行速度上限")] float _movementSpeedLimit;
+    /// <summary>Rigidbodyの速度の上限</summary>
+    [SerializeField, Header("プレイヤー再スポーン時の走行速度")] float _respawnedPlayerSpeed;
+    /// <summary>メインカメラ</summary>
+    [SerializeField, Header("プレイヤーカメラ")] Transform _mainCamTr;
+    /// <summary>カメラオフセット</summary>
+    [SerializeField, Header("カメラオフセット")] Vector3 _camOffset;
+    /// <summary>再スポーン時の座標オフセット</summary>
+    [SerializeField, Header("再スポーン時のオフセット")] Vector3 _spawnOffset;
+    /// <summary>プレイヤー残機初期値</summary>
+    [SerializeField,Header("プレイヤー残機初期値")] int _playerLifePoint;
+    /// <summary>プレイヤーの残機</summary>
+    int _playerLife = 0;
+    /// <summary>プレイヤー残機プロパティ</summary>
+    public int PlayerLife { get => _playerLife; }
+    /// <summary>Rigidbodyコンポーネント</summary>
+    Rigidbody _rb;
+    /// <summary>デバイス入力ハンドラー</summary>
+    PlayerInputhandlerComponent _playerInput;
+    /// <summary>Rigidbodyの速度</summary>
+    float _movementSpeed = 0f;
+    /// <summary>デバイス入力値</summary>
+    Vector2 _input = Vector2.zero;
+    /// <summary>硬直フラグ</summary>
+    bool _isFreez = false;
+    private void OnEnable()
+    {
+        _playerInput = GetComponent<PlayerInputhandlerComponent>();
+        //デリゲート登録
+        _playerInput.JumpEvent += PlayerJumpSequence;
+    }
+    private void OnDisable()
+    {
+        //デリゲート登録解除
+        _playerInput.JumpEvent -= PlayerJumpSequence;
+    }
+    private void Start()
+    {
+        //各コンポーネント取得
+        _rb = GetComponent<Rigidbody>();
+        //各軸回転の禁止
+        _rb.freezeRotation = true;
+        //プレイヤー残機プロパティ初期化
+        _playerLife = _playerLifePoint;
+    }
+    private void Update()
+    {
+        //入力値取得
+        _input = _playerInput.GetMoveInput();
+        //Debug.Log($"RBVEL{_rb.velocity}");
+    }
+    private void FixedUpdate()
+    {
+        PlayerAutoMoveSequence();
+        PlayerCamContSequence();
+    }
+    /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
+    void PlayerAutoMoveSequence()
+    {
+        if (!_isFreez)//硬直フラグがたってないなら
+        {
+
+
+            //正面移動 （自動）
+            _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
+            if (_rb.velocity.z > _movementSpeedLimit)
+            {
+                //Debug.Log($"速度制限{_rb.velocity.ToString()}");
+                SetPlayerMovementSpeed(_movementSpeedLimit);
+            }
+            //左右移動（手動）
+            _rb.AddForce(this.transform.right * _input.x * _moveSpeed, ForceMode.Force);
+        }
+    }
+
+    private void SetPlayerMovementSpeed(float speed)
+    {
+        var v = new Vector3(_rb.velocity.x, _rb.velocity.y, speed);
+        _rb.velocity = v;
+    }
+
+    /// <summary>プレイヤージャンプイベントシーケンス</summary>
+    void PlayerJumpSequence()
+    {
+        //ジャンプ（手動）
+        _rb.AddForce(this.transform.up * _jumpForce, ForceMode.Impulse);
+    }
+    /// <summary>カメラ操作シーケンス</summary>
+    void PlayerCamContSequence()
+    {
+        //カメラをプレイヤーの子オブジェクトにする
+        _mainCamTr.parent = this.transform;
+        //相対座標の初期化
+        _mainCamTr.localPosition = Vector3.zero;
+        //オフセットかける
+        _mainCamTr.localPosition = _camOffset;
+    }
+    /// <summary>スピードの加算メソッド</summary>
+    /// <param name="speed"></param>
+    public void AddPlayerMovementSpeed(float speed)
+    {
+        _movementSpeedLimit += speed;
+        //スピードアップ処理
+        var v = new Vector3(_rb.velocity.x, _rb.velocity.y, _movementSpeedLimit);
+        _rb.velocity = v;
+
+    }
+    /// <summary>プレイヤーライフを減らす</summary>
+    public void DecrementPlayerLife()
+    {
+        //残機を１減らす
+        _playerLife--;
+    }
+    /// <summary>プレイヤーの座標を落下前から少し後に戻す</summary>
+    public void ReturnCoordinate()
+    {
+        this.transform.position += _spawnOffset;
+    }
+    /// <summary>プレイヤーの座標を指定した座標に戻す</summary>
+    public void ReturnCoordinate(Transform transform)
+    {
+        this.transform.position = transform.position;
+    }
+    /// <summary>プレイヤーの移動速度を初期化</summary>
+    public void ResetPlayerMovementSpeed()
+    {
+        SetPlayerMovementSpeed(_respawnedPlayerSpeed);
+    }
+    /// <summary>硬直＋減速ルーチン</summary>
+    /// <param name="freezTime"></param>
+    /// <returns></returns>
+    IEnumerator CollidedWithObstacleRoutine(float freezTime)
+    {
+        Debug.Log("衝突ルーチン開始");
+        _isFreez = true;
+        this.transform.position += new Vector3(0, 0, -5);
+        _rb.velocity = Vector3.zero;
+        yield return new WaitForSeconds(freezTime);
+        _isFreez = false;
+    }
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 100, 100, 100), "SPEEDUP!"))
+        {
+            AddPlayerMovementSpeed(100);
+        }
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Collided!"))
+        {
+            StartCoroutine(CollidedWithObstacleRoutine(1));
+        }
+        GUI.Box(new Rect(0, 0, 300, 100), $"プレイヤー速度{_rb.velocity.z}" +
+            $"\nカメラオフセット{_camOffset.ToString()}");
+    }
+}
