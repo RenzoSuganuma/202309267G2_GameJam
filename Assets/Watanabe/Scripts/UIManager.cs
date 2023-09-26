@@ -13,4 +13,10 @@ public class UIManager
     private Text _playTimerText = default;
 
     public Text CountDownText { get => _countDownText; set => _countDownText = value; }
+
+    /// <summary> 経過時間を表示 </summary>
+    public void ViewTime(float time)
+    {
+        _playTimerText.text = time.ToString("F2");
+    }
 }
