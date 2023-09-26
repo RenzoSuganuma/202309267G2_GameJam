@@ -15,13 +15,15 @@ public class GameManager : MonoBehaviour
     private readonly ScoreManager _scoreManager = new();
 
     private bool _isGameStart = false;
-    private bool _isGamePlaying = false;
+    private bool _isPause = false;
     private bool _isGameClear = false;
 
+    public Fade Fade => _fade;
     public bool IsGameStart => _isGameStart;
 
     private void Start()
     {
+        _isPause = true;
         StartCoroutine(CountDown());
     }
 
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
             {
                 _uiManager.CountDownText.text = "すたーと！！";
                 _isGameStart = true;
+                _isPause = false;
                 yield return new WaitForSeconds(1f);
                 _uiManager.CountDownText.text = "";
                 yield break;
