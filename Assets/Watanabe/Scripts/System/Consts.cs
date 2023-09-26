@@ -37,5 +37,12 @@ public enum SEType
 {
     None,
     ItemGet,
+    Jump,
+    SpeedUp,
+    SpeedDown,
+    GameClear,
+    GameOver,
+    Fall,
+    CountDown,
 }
 #endregion
