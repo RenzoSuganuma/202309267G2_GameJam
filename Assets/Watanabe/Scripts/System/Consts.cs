@@ -36,5 +36,6 @@ public enum BGMType
 public enum SEType
 {
     None,
+    ItemGet,
 }
 #endregion
