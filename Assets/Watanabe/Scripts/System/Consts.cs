@@ -45,4 +45,11 @@ public enum SEType
     Fall,
     CountDown,
 }
+
+public enum StageResult
+{
+    None,
+    Clear,
+    Failed,
+}
 #endregion
