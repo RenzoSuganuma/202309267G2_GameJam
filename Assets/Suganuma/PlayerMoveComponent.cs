@@ -12,20 +12,28 @@ public class PlayerMoveComponent : MonoBehaviour
     [SerializeField, Header("ジャンプ力")] float _jumpForce;
     /// <summary>Rigidbodyの速度の上限</summary>
     [SerializeField, Header("プレイヤー走行速度上限")] float _movementSpeedLimit;
+    /// <summary>Rigidbodyの速度の上限</summary>
+    [SerializeField, Header("プレイヤー再スポーン時の走行速度")] float _respawnedPlayerSpeed;
     /// <summary>メインカメラ</summary>
     [SerializeField, Header("プレイヤーカメラ")] Transform _mainCamTr;
     /// <summary>カメラオフセット</summary>
     [SerializeField, Header("カメラオフセット")] Vector3 _camOffset;
-    /// <summary>プレイヤー残機</summary>
-    [SerializeField, Header("プレイヤー残機")] int _playerLife;
+    /// <summary>再スポーン時の座標オフセット</summary>
+    [SerializeField, Header("再スポーン時のオフセット")] Vector3 _spawnOffset;
+    /// <summary>プレイヤー残機初期値</summary>
+    [SerializeField,Header("プレイヤー残機初期値")] int _playerLifePoint;
+    /// <summary>プレイヤーの残機</summary>
+    int _playerLife = 0;
+    /// <summary>プレイヤー残機プロパティ</summary>
+    public int PlayerLife { get => _playerLife; }
     /// <summary>Rigidbodyコンポーネント</summary>
     Rigidbody _rb;
     /// <summary>デバイス入力ハンドラー</summary>
     PlayerInputhandlerComponent _playerInput;
     /// <summary>Rigidbodyの速度</summary>
-    float _movementSpeed;
+    float _movementSpeed = 0f;
     /// <summary>デバイス入力値</summary>
-    Vector2 _input;
+    Vector2 _input = Vector2.zero;
     private void OnEnable()
     {
         _playerInput = GetComponent<PlayerInputhandlerComponent>();
@@ -43,6 +51,8 @@ public class PlayerMoveComponent : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         //各軸回転の禁止
         _rb.freezeRotation = true;
+        //プレイヤー残機プロパティ初期化
+        _playerLife = _playerLifePoint;
     }
     private void Update()
     {
@@ -63,12 +73,18 @@ public class PlayerMoveComponent : MonoBehaviour
         if (_rb.velocity.z > _movementSpeedLimit)
         {
             //Debug.Log($"速度制限{_rb.velocity.ToString()}");
-            var v = new Vector3(_rb.velocity.x, _rb.velocity.y, _movementSpeedLimit);
-            _rb.velocity = v;
+            SetPlayerMovementSpeed(_movementSpeedLimit);
         }
         //左右移動（手動）
         _rb.AddForce(this.transform.right * _input.x * _moveSpeed,ForceMode.Force);
     }
+
+    private void SetPlayerMovementSpeed(float speed)
+    {
+        var v = new Vector3(_rb.velocity.x, _rb.velocity.y, speed);
+        _rb.velocity = v;
+    }
+
     /// <summary>プレイヤージャンプイベントシーケンス</summary>
     void PlayerJumpSequence()
     {
@@ -95,11 +111,26 @@ public class PlayerMoveComponent : MonoBehaviour
         _rb.velocity = v;
 
     }
-    /// <summary>プレイヤーが落下したときのメソッド</summary>
-    public void PlayerFallSequence()
+    /// <summary>プレイヤーライフを減らす</summary>
+    public void DecrementPlayerLife()
     {
         //残機を１減らす
         _playerLife--;
+    }
+    /// <summary>プレイヤーの座標を落下前から少し後に戻す</summary>
+    public void ReturnCoordinate()
+    {
+        this.transform.position += _spawnOffset;
+    }
+    /// <summary>プレイヤーの座標を指定した座標に戻す</summary>
+    public void ReturnCoordinate(Transform transform)
+    {
+        this.transform.position = transform.position;
+    }
+    /// <summary>プレイヤーの移動速度を初期化</summary>
+    public void ResetPlayerMovementSpeed()
+    {
+        SetPlayerMovementSpeed(_respawnedPlayerSpeed);
     }
     private void OnGUI()
     {
