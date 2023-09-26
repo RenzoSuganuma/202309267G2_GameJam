@@ -7,10 +7,10 @@ namespace Constants
     {
         public static readonly Dictionary<SceneNames, string> Scenes = new()
         {
-            [SceneNames.Title] = "TitleScene",
-            [SceneNames.Home] = "HomeScene",
-            [SceneNames.InGame] = "InGameScene",
-            [SceneNames.Result] = "ResultScene"
+            [SceneNames.Title] = "Title",
+            [SceneNames.Home] = "Home",
+            [SceneNames.InGame] = "Game",
+            [SceneNames.Result] = "Result"
         };
     }
 }
