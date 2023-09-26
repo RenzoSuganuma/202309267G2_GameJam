@@ -96,7 +96,7 @@ public class PlayerMoveComponent : MonoBehaviour
 
     }
     /// <summary>プレイヤーが落下したときのメソッド</summary>
-    void PlayerFallSequence()
+    public void PlayerFallSequence()
     {
         //残機を１減らす
         _playerLife--;
