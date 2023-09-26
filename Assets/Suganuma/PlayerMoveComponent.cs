@@ -72,8 +72,6 @@ public class PlayerMoveComponent : MonoBehaviour
     {
         if (!_isFreez)//硬直フラグがたってないなら
         {
-
-
             //正面移動 （自動）
             _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
             if (_rb.velocity.z > _movementSpeedLimit)
@@ -88,6 +86,7 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private void SetPlayerMovementSpeed(float speed)
     {
+        //Z軸方向だけ速度を変更
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, speed);
         _rb.velocity = v;
     }
@@ -112,6 +111,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <param name="speed"></param>
     public void AddPlayerMovementSpeed(float speed)
     {
+        //速度上限を増やす
         _movementSpeedLimit += speed;
         //スピードアップ処理
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, _movementSpeedLimit);
