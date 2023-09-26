@@ -34,6 +34,8 @@ public class PlayerMoveComponent : MonoBehaviour
     float _movementSpeed = 0f;
     /// <summary>デバイス入力値</summary>
     Vector2 _input = Vector2.zero;
+    /// <summary>硬直フラグ</summary>
+    bool _isFreez = false;
     private void OnEnable()
     {
         _playerInput = GetComponent<PlayerInputhandlerComponent>();
@@ -68,15 +70,20 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
     void PlayerAutoMoveSequence()
     {
-        //正面移動 （自動）
-        _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
-        if (_rb.velocity.z > _movementSpeedLimit)
+        if (!_isFreez)//硬直フラグがたってないなら
         {
-            //Debug.Log($"速度制限{_rb.velocity.ToString()}");
-            SetPlayerMovementSpeed(_movementSpeedLimit);
+
+
+            //正面移動 （自動）
+            _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
+            if (_rb.velocity.z > _movementSpeedLimit)
+            {
+                //Debug.Log($"速度制限{_rb.velocity.ToString()}");
+                SetPlayerMovementSpeed(_movementSpeedLimit);
+            }
+            //左右移動（手動）
+            _rb.AddForce(this.transform.right * _input.x * _moveSpeed, ForceMode.Force);
         }
-        //左右移動（手動）
-        _rb.AddForce(this.transform.right * _input.x * _moveSpeed,ForceMode.Force);
     }
 
     private void SetPlayerMovementSpeed(float speed)
@@ -132,11 +139,27 @@ public class PlayerMoveComponent : MonoBehaviour
     {
         SetPlayerMovementSpeed(_respawnedPlayerSpeed);
     }
+    /// <summary>硬直＋減速ルーチン</summary>
+    /// <param name="freezTime"></param>
+    /// <returns></returns>
+    IEnumerator CollidedWithObstacleRoutine(float freezTime)
+    {
+        Debug.Log("衝突ルーチン開始");
+        _isFreez = true;
+        this.transform.position += new Vector3(0, 0, -5);
+        _rb.velocity = Vector3.zero;
+        yield return new WaitForSeconds(freezTime);
+        _isFreez = false;
+    }
     private void OnGUI()
     {
         if (GUI.Button(new Rect(0, 100, 100, 100), "SPEEDUP!"))
         {
             AddPlayerMovementSpeed(100);
+        }
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Collided!"))
+        {
+            StartCoroutine(CollidedWithObstacleRoutine(1));
         }
         GUI.Box(new Rect(0, 0, 300, 100), $"プレイヤー速度{_rb.velocity.z}" +
             $"\nカメラオフセット{_camOffset.ToString()}");
