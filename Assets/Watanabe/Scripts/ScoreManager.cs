@@ -10,20 +10,11 @@ public class ScoreManager
     public float Timer => _timer;
 
     /// <summary> 時間計測 </summary>
-    public void TimeMeasurement()
-    {
-        _timer += Time.deltaTime;
-    }
+    public void TimeMeasurement() { _timer += Time.deltaTime; }
 
     /// <summary> 最終タイムの設定 </summary>
-    public void ResultSet()
-    {
-        ResultManager.ResultTime = _timer;
-    }
+    public void ResultSet() { ResultManager.ResultTime = _timer; }
 
     /// <summary> タイム加算 </summary>
-    public void TimeAddition(float value)
-    {
-        _timer += value;
-    }
+    public void TimeAddition(float value) { _timer += value; }
 }

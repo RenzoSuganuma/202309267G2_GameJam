@@ -36,5 +36,20 @@ public enum BGMType
 public enum SEType
 {
     None,
+    ItemGet,
+    Jump,
+    SpeedUp,
+    SpeedDown,
+    GameClear,
+    GameOver,
+    Fall,
+    CountDown,
+}
+
+public enum StageResult
+{
+    None,
+    Clear,
+    Failed,
 }
 #endregion

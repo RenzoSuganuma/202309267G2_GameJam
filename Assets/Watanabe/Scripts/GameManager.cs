@@ -13,9 +13,9 @@ public class GameManager : MonoBehaviour
     private UIManager _uiManager = new();
 
     private readonly ScoreManager _scoreManager = new();
+    private StageResult _result = StageResult.None;
 
     private bool _isPause = false;
-    private bool _isGameFinish = false;
 
     public static GameManager Instance { get; private set; }
 
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (_isGameFinish)
+        if (_result != StageResult.None)
         {
             _scoreManager.ResultSet();
             Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
@@ -70,6 +70,9 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
+
+    /// <summary> ゲーム終了時の判定 </summary>
+    public void GameFinish(StageResult result) { _result = result; }
 
     /// <summary> ポーズ処理の切り替え </summary>
     public void ChangePauseStatus(bool flag) { _isPause = flag; }

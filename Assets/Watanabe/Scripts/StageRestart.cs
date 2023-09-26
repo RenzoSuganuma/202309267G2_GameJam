@@ -22,7 +22,8 @@ public class StageRestart : MonoBehaviour
             //GameOver
             if (player.PlayerLife == 0)
             {
-                Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
+                GameManager.Instance.GameFinish(StageResult.Failed);
+                Fade.Instance.RegisterFadeOutEvent(new Action[] { () => ResultManager.Instance.Failed() });
                 Fade.Instance.StartFadeOut();
                 return;
             }

@@ -101,6 +101,7 @@ public class PlayerMoveComponent : MonoBehaviour
     {
         //ジャンプ（手動）
         _rb.AddForce(this.transform.up * _jumpForce, ForceMode.Impulse);
+        SoundManager.Instance.PlaySE(SEType.Jump);
     }
     /// <summary>カメラ操作シーケンス</summary>
     void PlayerCamContSequence()
