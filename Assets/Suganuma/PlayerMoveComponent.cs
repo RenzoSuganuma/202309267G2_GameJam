@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PlayerInputhandlerComponent))]
 /// <summary>プレイヤーの動くためのコンポーネント</summary>
@@ -22,6 +24,8 @@ public class PlayerMoveComponent : MonoBehaviour
     [SerializeField, Header("再スポーン時のオフセット")] Vector3 _spawnOffset;
     /// <summary>プレイヤー残機初期値</summary>
     [SerializeField,Header("プレイヤー残機初期値")] int _playerLifePoint;
+    /// <summary>プレイヤーの残機カウントのテキスト</summary>
+    [SerializeField,Header("残機表示UI")] Text _lifeCountText;
     /// <summary>プレイヤーの残機</summary>
     int _playerLife = 0;
     /// <summary>プレイヤー残機プロパティ</summary>
@@ -66,6 +70,7 @@ public class PlayerMoveComponent : MonoBehaviour
     {
         PlayerAutoMoveSequence();
         PlayerCamContSequence();
+        PlayerLifeDisplaySequence();
     }
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
     void PlayerAutoMoveSequence()
@@ -106,6 +111,11 @@ public class PlayerMoveComponent : MonoBehaviour
         _mainCamTr.localPosition = Vector3.zero;
         //オフセットかける
         _mainCamTr.localPosition = _camOffset;
+    }
+    void PlayerLifeDisplaySequence()
+    {
+        //UIのTextに文字列の格納
+        _lifeCountText.text = $"×{_playerLife}";
     }
     /// <summary>スピードの加算メソッド</summary>
     /// <param name="speed"></param>
@@ -160,6 +170,10 @@ public class PlayerMoveComponent : MonoBehaviour
         if (GUI.Button(new Rect(0, 200, 100, 100), "Collided!"))
         {
             StartCoroutine(CollidedWithObstacleRoutine(1));
+        }
+        if (GUI.Button(new Rect(0, 300, 100, 100), "Falled!"))
+        {
+            DecrementPlayerLife();
         }
         GUI.Box(new Rect(0, 0, 300, 100), $"プレイヤー速度{_rb.velocity.z}" +
             $"\nカメラオフセット{_camOffset.ToString()}");
