@@ -9,17 +9,12 @@ public class GameManager : MonoBehaviour
     private int _countDownTime = 0;
     [SerializeField]
     private UIManager _uiManager = new();
-    [SerializeField]
-    private Fade _fade = default;
 
     private readonly ScoreManager _scoreManager = new();
 
     private bool _isGameStart = false;
     private bool _isPause = false;
     private bool _isGameClear = false;
-
-    public Fade Fade => _fade;
-    public bool IsGameStart => _isGameStart;
 
     private void Start()
     {
@@ -32,13 +27,16 @@ public class GameManager : MonoBehaviour
         if (_isGameClear)
         {
             _scoreManager.ResultSet();
-            _fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
-            _fade.Instance.StartFadeOut();
+            Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
+            Fade.Instance.StartFadeOut();
             return;
         }
 
-        _scoreManager.TimeMeasurement();
-        _uiManager.ViewTime(_scoreManager.Timer);
+        if (!_isPause)
+        {
+            _scoreManager.TimeMeasurement();
+            _uiManager.ViewTime(_scoreManager.Timer);
+        }
     }
 
     /// <summary> ゲーム開始時のカウントダウン </summary>
@@ -60,4 +58,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
+
+    /// <summary> ポーズ処理の切り替え </summary>
+    public void ChangePauseStatus(bool flag) { _isPause = flag; }
 }

@@ -16,7 +16,7 @@ public class Fade : MonoBehaviour
     private Action[] _onCompleteFadeIn = new Action[0];
     private Action[] _onCompleteFadeOut = new Action[0];
 
-    public Fade Instance { get; private set; }
+    public　static Fade Instance { get; private set; }
 
     private void Awake()
     {
