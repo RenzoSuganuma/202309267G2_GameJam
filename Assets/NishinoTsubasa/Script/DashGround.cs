@@ -3,15 +3,17 @@ using UnityEngine;
 public class DashGround : MonoBehaviour
 {
     [Header("加えるスピードの値")]
-    [SerializeField,Tooltip("変化するスピードの値")] float _addSpeedValue = 0;//プレイヤーのスピードを変える変数
+    [SerializeField,Tooltip("変化するスピードの値")] float _addSpeedValue = 0;//スピードの値に変化を加える
     [SerializeField] float _interval = 1f;
-    
+    BoxCollider2D _collider;
     AudioSource _audioSource;
     float _timer; 
     bool _colliderSwich = false;//コライダーに複数回触れれないようにboolで管理する
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
+        _collider = GetComponent<BoxCollider2D>();
+        _collider.isTrigger = true;
     }
     void Update()
     {
