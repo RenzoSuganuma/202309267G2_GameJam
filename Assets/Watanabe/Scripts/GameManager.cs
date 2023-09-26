@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Constants;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,9 +14,20 @@ public class GameManager : MonoBehaviour
 
     private readonly ScoreManager _scoreManager = new();
 
-    private bool _isGameStart = false;
     private bool _isPause = false;
-    private bool _isGameClear = false;
+    private bool _isGameFinish = false;
+
+    public static GameManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null && SceneManager.GetActiveScene().name == Consts.Scenes[SceneNames.InGame])
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else { Destroy(gameObject); }
+    }
 
     private void Start()
     {
@@ -24,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (_isGameClear)
+        if (_isGameFinish)
         {
             _scoreManager.ResultSet();
             Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
@@ -47,7 +60,6 @@ public class GameManager : MonoBehaviour
             if (i == 0)
             {
                 _uiManager.CountDownText.text = "すたーと！！";
-                _isGameStart = true;
                 _isPause = false;
                 yield return new WaitForSeconds(1f);
                 _uiManager.CountDownText.text = "";
