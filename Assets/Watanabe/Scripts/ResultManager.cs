@@ -9,8 +9,6 @@ public class ResultManager : MonoBehaviour
     private Text _resultTimeText = default;
     [SerializeField]
     private Button _toTitleButton = default;
-    [SerializeField]
-    private Fade _fade = default;
 
     private static float _resultTime = 0f;
 
@@ -20,7 +18,7 @@ public class ResultManager : MonoBehaviour
     {
         _resultTimeText.text = _resultTime.ToString("F2");
 
-        _fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Title) });
-        _toTitleButton.onClick.AddListener(() => _fade.Instance.StartFadeOut());
+        Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Title) });
+        _toTitleButton.onClick.AddListener(() => Fade.Instance.StartFadeOut());
     }
 }

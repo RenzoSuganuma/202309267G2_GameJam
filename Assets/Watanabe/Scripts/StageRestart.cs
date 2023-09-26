@@ -14,26 +14,31 @@ public class StageRestart : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out PlayerMoveComponent player))
         {
+            //一時停止する
+            _gameManager.ChangePauseStatus(true);
             //playerの残機を減らす
             player.DecrementPlayerLife();
 
             //GameOver
             if (player.PlayerLife == 0)
             {
-                _gameManager.Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
-                _gameManager.Fade.Instance.StartFadeOut();
+                Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
+                Fade.Instance.StartFadeOut();
                 return;
             }
 
             //落下時にPlayerの位置を調整し、やり直し
-            _gameManager.Fade.Instance.RegisterFadeOutEvent(
+            Fade.Instance.RegisterFadeOutEvent(
                 new Action[]
                 {
                     () => player.ReturnCoordinate(),
                     () => player.ReturnCoordinate()
                 });
-            _gameManager.Fade.Instance.StartFadeOut();
-            _gameManager.Fade.Instance.StartFadeIn();
+            Fade.Instance.StartFadeOut();
+
+            //フェードが終わったら再開する
+            Fade.Instance.RegisterFadeInEvent(new Action[] { () => _gameManager.ChangePauseStatus(false) });
+            Fade.Instance.StartFadeIn();
         }
     }
 }
