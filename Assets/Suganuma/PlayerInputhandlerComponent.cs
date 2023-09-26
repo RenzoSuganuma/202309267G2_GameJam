@@ -23,5 +23,5 @@ public class PlayerInputhandlerComponent : MonoBehaviour
         //デバッグログ
         //Debug.Log($"WASD入力:{_moveInput.ToString()}");
     }
-    public Vector2 GetMoveInput() { return _moveInput; }
+    public Vector2 GetMoveInput() { return _moveInput.normalized; }
 }
