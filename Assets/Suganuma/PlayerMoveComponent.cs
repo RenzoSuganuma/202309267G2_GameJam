@@ -16,6 +16,8 @@ public class PlayerMoveComponent : MonoBehaviour
     [SerializeField, Header("プレイヤーカメラ")] Transform _mainCamTr;
     /// <summary>カメラオフセット</summary>
     [SerializeField, Header("カメラオフセット")] Vector3 _camOffset;
+    /// <summary>プレイヤー残機</summary>
+    [SerializeField, Header("プレイヤー残機")] int _playerLife;
     /// <summary>Rigidbodyコンポーネント</summary>
     Rigidbody _rb;
     /// <summary>デバイス入力ハンドラー</summary>
@@ -92,6 +94,12 @@ public class PlayerMoveComponent : MonoBehaviour
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, _movementSpeedLimit);
         _rb.velocity = v;
 
+    }
+    /// <summary>プレイヤーが落下したときのメソッド</summary>
+    public void PlayerFallSequence()
+    {
+        //残機を１減らす
+        _playerLife--;
     }
     private void OnGUI()
     {

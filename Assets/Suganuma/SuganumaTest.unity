@@ -706,6 +706,10 @@ PrefabInstance:
       propertyPath: _mainCamTr
       value: 
       objectReference: {fileID: 243313017}
+    - target: {fileID: 4498855878324683132, guid: 891d2334992801e42b7eed899814d89b, type: 3}
+      propertyPath: _playerLife
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4498855878324683135, guid: 891d2334992801e42b7eed899814d89b, type: 3}
       propertyPath: m_RootOrder
       value: 2
