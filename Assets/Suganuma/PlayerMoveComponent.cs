@@ -104,6 +104,7 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private void SetPlayerMovementSpeed(float speed)
     {
+        Debug.Log("プレイヤー速度セット");
         //Z軸方向だけ速度を変更
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, speed);
         _rb.velocity = v;
@@ -119,10 +120,10 @@ public class PlayerMoveComponent : MonoBehaviour
         }
         else//自動スナップ処理
         {
-           this.transform.position = _snapPointTr.position;
-            SetPlayerMovementSpeed(30);
+            this.transform.position = _snapPointTr.position;
+            SetPlayerMovementSpeed(15);
         }
-        SoundManager.Instance.PlaySE(SEType.Jump);
+        //SoundManager.Instance.PlaySE(SEType.Jump);
     }
     /// <summary>カメラ操作シーケンス</summary>
     void PlayerCamContSequence()
@@ -169,6 +170,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤーの移動速度を初期化</summary>
     public void ResetPlayerMovementSpeed()
     {
+        Debug.Log("プレイヤー速度リセット");
         SetPlayerMovementSpeed(_respawnedPlayerSpeed);
     }
     /// <summary>硬直＋減速ルーチン</summary>
@@ -206,6 +208,12 @@ public class PlayerMoveComponent : MonoBehaviour
                     _snapPointTr = other.transform;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
+                    break;
+                }
+            case "Obstacle":
+                {
+                    //硬直ルーチン
+                    StartCoroutine(CollidedWithObstacleRoutine(1));
                     break;
                 }
         }
