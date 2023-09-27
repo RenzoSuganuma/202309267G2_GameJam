@@ -37,14 +37,14 @@ public enum SEType
 {
     None,
     ItemGet,
-    Jump, //できた
-    SpeedUp, //できた
-    SpeedDown, //できた
-    GameClear, //できてない
-    GameOver, //なし
-    Fall, //できた
-    CountDown, //できた
-    Obstacle, //できた
+    Jump,
+    SpeedUp,
+    SpeedDown,
+    GameClear,
+    GameOver,
+    Fall,
+    CountDown,
+    Obstacle,
 }
 
 public enum StageResult

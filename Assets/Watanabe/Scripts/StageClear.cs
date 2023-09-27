@@ -9,7 +9,12 @@ public class StageClear : MonoBehaviour
         if (other.gameObject.TryGetComponent(out PlayerMoveComponent player))
         {
             GameManager.Instance.GameFinish(StageResult.Clear);
-            Fade.Instance.RegisterFadeOutEvent(new Action[] { () => ResultManager.Instance.Clear() });
+            Fade.Instance.RegisterFadeOutEvent(
+                new Action[]
+                {
+                    () => SoundManager.Instance.PlaySE(SEType.GameClear),
+                    () => ResultManager.Instance.Clear()
+                });
             Fade.Instance.StartFadeOut();
         }
     }
