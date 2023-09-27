@@ -11,6 +11,7 @@ public class UIManager
     [Tooltip("ゲームの進行時間を表示するText")]
     [SerializeField]
     private Text _playTimerText = default;
+    [Tooltip("ゲームスタートボタン")]
     [SerializeField]
     private Button _startButton = default;
 
