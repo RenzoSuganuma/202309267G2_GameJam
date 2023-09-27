@@ -51,6 +51,12 @@ public class PlayerMoveComponent : MonoBehaviour
     Transform _snapPointTr;
     /// <summary>ゲームマネージャー</summary>
     GameManager _gmanager;
+    /// <summary>ドボンした時点のトランスフォーム</summary>
+    Transform _dobonPointTr;
+    /// <summary>その場にとどまるのを強制するフラグ</summary>
+    bool _forceFreez = false;
+    /// <summary>接地判定フラグ</summary>
+    bool _isGrounded = true;
     private void OnEnable()
     {
         _playerInput = GetComponent<PlayerInputhandlerComponent>();
@@ -84,11 +90,12 @@ public class PlayerMoveComponent : MonoBehaviour
         PlayerAutoMoveSequence();
         PlayerCamContSequence();
         PlayerLifeDisplaySequence();
+        PlayerHoveringSequence();
     }
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
     void PlayerAutoMoveSequence()
     {
-        if (!_isFreez /*&& !_gmanager.IsPause*/)//硬直フラグがたってないなら
+        if (!_isFreez && !_gmanager.IsPause)//硬直フラグがたってないなら
         {
             //正面移動 （自動）
             _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
@@ -109,14 +116,22 @@ public class PlayerMoveComponent : MonoBehaviour
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, speed);
         _rb.velocity = v;
     }
-
+    private void SetPlayerMovementSpeed(Vector3 speed)
+    {
+        Debug.Log("プレイヤー速度セット");
+        //Z軸方向だけ速度を変更
+        var v = speed;
+        _rb.velocity = v;
+    }
     /// <summary>プレイヤージャンプイベントシーケンス</summary>
     void PlayerJumpSequence()
     {
         //ジャンプ（手動）
         if (!_canSnapNow)//通常ジャンプ処理
         {
+            _rb.mass = 1.5f;
             _rb.AddForce(this.transform.up * _jumpForce, ForceMode.Impulse);
+
         }
         else//自動スナップ処理
         {
@@ -140,6 +155,10 @@ public class PlayerMoveComponent : MonoBehaviour
         //UIのTextに文字列の格納
         _lifeCountText.text = $"×{_playerLife}";
     }
+    void PlayerHoveringSequence()
+    {
+        if (!_isGrounded) _rb.mass = 1;
+    }
     /// <summary>スピードの加算メソッド</summary>
     /// <param name="speed"></param>
     public void AddPlayerMovementSpeed(float speed)
@@ -149,7 +168,6 @@ public class PlayerMoveComponent : MonoBehaviour
         //スピードアップ処理
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, _movementSpeedLimit);
         _rb.velocity = v;
-
     }
     /// <summary>プレイヤーライフを減らす</summary>
     public void DecrementPlayerLife()
@@ -160,7 +178,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤーの座標を落下前から少し後に戻す</summary>
     public void ReturnCoordinate()
     {
-        this.transform.position += _spawnOffset;
+        this.transform.position = _dobonPointTr.position + _spawnOffset;
     }
     /// <summary>プレイヤーの座標を指定した座標に戻す</summary>
     public void ReturnCoordinate(Transform transform)
@@ -180,11 +198,23 @@ public class PlayerMoveComponent : MonoBehaviour
     {
         Debug.Log("衝突ルーチン開始");
         _isFreez = true;
-        this.transform.position += new Vector3(0, 0, -5);
+        this.transform.position += _spawnOffset;
         _rb.velocity = Vector3.zero;
         CollidedEvent();//イベント呼び出し
         yield return new WaitForSeconds(freezTime);
         _isFreez = false;
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        switch (collision.gameObject.tag)//衝突判定
+        {
+            case "Obstacle":
+                {
+                    //硬直ルーチン
+                    StartCoroutine(CollidedWithObstacleRoutine(1));
+                    break;
+                }
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -194,7 +224,10 @@ public class PlayerMoveComponent : MonoBehaviour
                 {
                     //プレイヤー死亡処理←ゲームマネージャーのメソッドを参照
                     Debug.Log("ドボン！落下した！");
-                    _mainCamTr.SetParent(null);
+                    _rb.Sleep();
+                    //座標の記録
+                    _dobonPointTr = this.transform;
+                    //_mainCamTr.SetParent(null);
                     break;
                 }
             case "SnapPoint"://スナップポイント可能範囲にいるとき
@@ -210,10 +243,9 @@ public class PlayerMoveComponent : MonoBehaviour
                     //Debug.Log($"スナップ座標差分{trDis}");
                     break;
                 }
-            case "Obstacle":
+            case "Ground"://接地判定→接地
                 {
-                    //硬直ルーチン
-                    StartCoroutine(CollidedWithObstacleRoutine(1));
+                    _isGrounded = true;
                     break;
                 }
         }
@@ -231,8 +263,15 @@ public class PlayerMoveComponent : MonoBehaviour
                     _canSnapNow = true;
                     //座標代入
                     _snapPointTr = other.transform;
+                    //プレイヤー速度の制限
+                    SetPlayerMovementSpeed(10);
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
+                    break;
+                }
+            case "Ground":
+                {
+                    _isGrounded = true;
                     break;
                 }
         }
@@ -247,6 +286,11 @@ public class PlayerMoveComponent : MonoBehaviour
                     _canSnapNow = false;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
+                    break;
+                }
+            case "Ground"://接地判定→空中
+                {
+                    _isGrounded = false;
                     break;
                 }
         }
