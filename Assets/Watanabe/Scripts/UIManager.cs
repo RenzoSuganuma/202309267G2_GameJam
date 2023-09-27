@@ -11,16 +11,8 @@ public class UIManager
     [Tooltip("ゲームの進行時間を表示するText")]
     [SerializeField]
     private Text _playTimerText = default;
-    [Tooltip("ゲームスタートボタン")]
-    [SerializeField]
-    private Button _startButton = default;
 
     public Text CountDownText { get => _countDownText; set => _countDownText = value; }
-
-    public void Init()
-    {
-        _startButton.onClick.AddListener(() => GameManager.Instance.GameStart());
-    }
 
     /// <summary> 経過時間を表示 </summary>
     public void ViewTime(float time)
