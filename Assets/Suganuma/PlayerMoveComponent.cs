@@ -114,7 +114,7 @@ public class PlayerMoveComponent : MonoBehaviour
         }
         else//自動スナップ処理
         {
-
+           this.transform.position = _snapPointTr.position;
         }
         SoundManager.Instance.PlaySE(SEType.Jump);
     }
@@ -194,6 +194,8 @@ public class PlayerMoveComponent : MonoBehaviour
                     var trDis = other.gameObject.transform.position.x - this.transform.position.x;
                     //スナップ可能フラグを立てる
                     _canSnapNow = true;
+                    //座標代入
+                    _snapPointTr = other.transform;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
                     break;
@@ -206,11 +208,13 @@ public class PlayerMoveComponent : MonoBehaviour
         {
             case "SnapPoint"://スナップポイント可能範囲にいるとき
                 {
-                    _canSnapText.text = "スナップ！！！";//テキスト表示
+                    _canSnapText.text = "スナップ！";//テキスト表示
                     //座標差分算出
                     var trDis = other.gameObject.transform.position.x - this.transform.position.x;
                     //スナップ可能フラグを立てる
                     _canSnapNow = true;
+                    //座標代入
+                    _snapPointTr = other.transform;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
                     break;
