@@ -1,46 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class obstacle : MonoBehaviour
+public class Obstacle : MonoBehaviour
 {
-    [SerializeField] float _interval = 1f;
-    PlayerMoveComponent _move;
-    float _timer = 1f;
-    BoxCollider _collider;
-    bool _colliderSwich = false;
-    // Start is called before the first frame update
-    void Start()
+    private void OnCollisionEnter(Collision collision)
     {
-        _collider = GetComponent<BoxCollider>();
-        _move = gameObject.AddComponent<PlayerMoveComponent>();
-        _collider.isTrigger = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        _timer += Time.deltaTime;
-        if (_timer > _interval)
+        if (collision.gameObject.TryGetComponent(out PlayerMoveComponent player))
         {
-            _colliderSwich = false;
-            _timer = 0;
-        }
-    }
+            //一時停止する
+            GameManager.Instance.ChangePauseStatus(true);
+            //playerの残機を減らす
+            player.DecrementPlayerLife();
 
-    void bgm()
-    {
-        //SoundManager.Instance.PlaySE(SEType.Obstacle);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (_colliderSwich != true)
-        {
-            if (other.gameObject.TryGetComponent(out PlayerMoveComponent playerMove))
+            //GameOver
+            if (player.PlayerLife == 0)
             {
-                //SoundManager.Instance.PlaySE(SEType.Obstacle);
+                GameManager.Instance.GameFinish(StageResult.Failed);
+                Fade.Instance.RegisterFadeOutEvent(
+                    new Action[]
+                    {
+                        () => SoundManager.Instance.CancelBGM(),
+                        () => SoundManager.Instance.PlaySE(SEType.GameOver),
+                        () => ResultManager.Instance.Failed()
+                    });
+                Fade.Instance.StartFadeOut();
+                return;
             }
+
+            //落下時にPlayerの位置を調整し、やり直し
+            Fade.Instance.RegisterFadeInEvent(new Action[] { () => GameManager.Instance.ChangePauseStatus(false) });
+            Fade.Instance.RegisterFadeOutEvent(
+                new Action[]
+                {
+                    () => player.ReturnCoordinate(),
+                    () => Fade.Instance.StartFadeIn()
+                });
+            Fade.Instance.StartFadeOut();
         }
     }
 }

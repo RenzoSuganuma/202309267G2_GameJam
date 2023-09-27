@@ -39,8 +39,6 @@ public class PlayerMoveComponent : MonoBehaviour
     Rigidbody _rb;
     /// <summary>デバイス入力ハンドラー</summary>
     PlayerInputhandlerComponent _playerInput;
-    /// <summary>Rigidbodyの速度</summary>
-    float _movementSpeed = 0f;
     /// <summary>デバイス入力値</summary>
     Vector2 _input = Vector2.zero;
     /// <summary>硬直フラグ</summary>
@@ -50,11 +48,9 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>スナップ可能フラグ</summary>
     bool _canSnapNow = false;
     /// <summary>スナップポイントの座標</summary>
-    Transform _snapPointTr;
-    /// <summary>ゲームマネージャー</summary>
-    GameManager _gmanager;
-    /// <summary>ドボンした時点のトランスフォーム</summary>
-    Transform _dobonPointTr;
+    Vector3 _snapPointTr;
+    /// <summary>ドボンした時点の座標</summary>
+    Vector3 _dobonPointTr;
     /// <summary>その場にとどまるのを強制するフラグ</summary>
     bool _forceFreez = false;
     /// <summary>接地判定フラグ</summary>
@@ -78,17 +74,19 @@ public class PlayerMoveComponent : MonoBehaviour
         _rb.freezeRotation = true;
         //プレイヤー残機プロパティ初期化
         _playerLife = _playerLifePoint;
-        //ゲームマネージャー取得
-        _gmanager = GameObject.FindFirstObjectByType<GameManager>();
     }
     private void Update()
     {
+        if (GameManager.Instance.IsPause) { return; }
+
         //入力値取得
         _input = _playerInput.GetMoveInput();
         //Debug.Log($"RBVEL{_rb.velocity}");
     }
     private void FixedUpdate()
     {
+        if (GameManager.Instance.IsPause) { return; }
+
         PlayerAutoMoveSequence();
         PlayerCamContSequence();
         PlayerLifeDisplaySequence();
@@ -97,7 +95,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
     void PlayerAutoMoveSequence()
     {
-        if (!_isFreez && !_gmanager.IsPause)//硬直フラグがたってないなら
+        if (!_isFreez && !GameManager.Instance.IsPause)//硬直フラグがたってないなら
         {
             //正面移動 （自動）
             _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
@@ -137,7 +135,7 @@ public class PlayerMoveComponent : MonoBehaviour
         }
         else//自動スナップ処理
         {
-            this.transform.position = _snapPointTr.position;
+            this.transform.position = _snapPointTr;
             SetPlayerMovementSpeed(15);
         }
         //SoundManager.Instance.PlaySE(SEType.Jump);
@@ -180,7 +178,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤーの座標を落下前から少し後に戻す</summary>
     public void ReturnCoordinate()
     {
-        this.transform.position = _dobonPointTr.position + _spawnOffset;
+        this.transform.position = _dobonPointTr + _spawnOffset;
     }
     /// <summary>プレイヤーの座標を指定した座標に戻す</summary>
     public void ReturnCoordinate(Transform transform)
@@ -214,6 +212,10 @@ public class PlayerMoveComponent : MonoBehaviour
                 {
                     //硬直ルーチン
                     StartCoroutine(CollidedWithObstacleRoutine(1));
+                    _dobonPointTr = new Vector3(
+                        collision.gameObject.transform.position.x,
+                        6f,
+                        gameObject.transform.position.z);
                     break;
                 }
             case "Ground"://接地判定→接地
@@ -244,7 +246,10 @@ public class PlayerMoveComponent : MonoBehaviour
                     Debug.Log("ドボン！落下した！");
                     _rb.Sleep();
                     //座標の記録
-                    _dobonPointTr = this.transform;
+                    _dobonPointTr = new Vector3(
+                        other.gameObject.transform.GetChild(0).gameObject.transform.position.x,
+                        6f,
+                        gameObject.transform.position.z);
                     //_mainCamTr.SetParent(null);
                     break;
                 }
@@ -256,7 +261,7 @@ public class PlayerMoveComponent : MonoBehaviour
                     //スナップ可能フラグを立てる
                     _canSnapNow = true;
                     //座標代入
-                    _snapPointTr = other.transform;
+                    _snapPointTr = other.transform.position;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
                     break;
@@ -282,7 +287,8 @@ public class PlayerMoveComponent : MonoBehaviour
                     //スナップ可能フラグを立てる
                     _canSnapNow = true;
                     //座標代入
-                    _snapPointTr = other.transform;
+                    _snapPointTr = new Vector3();
+                    _snapPointTr = other.transform.position;
                     //プレイヤー速度の制限
                     SetPlayerMovementSpeed(10);
                     //this.transform.position = other.transform.position;
@@ -304,27 +310,28 @@ public class PlayerMoveComponent : MonoBehaviour
                 {
                     _canSnapText.text = "";
                     _canSnapNow = false;
+                    _snapPointTr = Vector3.zero;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
                     break;
                 }
         }
     }
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 100, 100, 100), "SPEEDUP!"))
-        {
-            AddPlayerMovementSpeed(100);
-        }
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Collided!"))
-        {
-            StartCoroutine(CollidedWithObstacleRoutine(1));
-        }
-        if (GUI.Button(new Rect(0, 300, 100, 100), "Falled!"))
-        {
-            DecrementPlayerLife();
-        }
-        GUI.Box(new Rect(0, 0, 300, 100), $"プレイヤー速度{_rb.velocity.z}" +
-            $"\nカメラオフセット{_camOffset.ToString()}");
-    }
+    //private void OnGUI()
+    //{
+    //    if (GUI.Button(new Rect(0, 100, 100, 100), "SPEEDUP!"))
+    //    {
+    //        AddPlayerMovementSpeed(100);
+    //    }
+    //    if (GUI.Button(new Rect(0, 200, 100, 100), "Collided!"))
+    //    {
+    //        StartCoroutine(CollidedWithObstacleRoutine(1));
+    //    }
+    //    if (GUI.Button(new Rect(0, 300, 100, 100), "Falled!"))
+    //    {
+    //        DecrementPlayerLife();
+    //    }
+    //    GUI.Box(new Rect(0, 0, 300, 100), $"プレイヤー速度{_rb.velocity.z}" +
+    //        $"\nカメラオフセット{_camOffset.ToString()}");
+    //}
 }
