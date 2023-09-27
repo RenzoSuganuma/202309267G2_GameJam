@@ -24,11 +24,11 @@ public class PlayerAudio : MonoBehaviour
         _playerInputhandler.JumpEvent -= PlayerSe1;
         _playerMove.CollidedEvent -= PlayerSe2;
     }
-    void PlayerSe1()
+    void PlayerSe1() //ジャンプした時にジャンプの効果音を鳴らす
     {
         SoundManager.Instance.PlaySE(SEType.Jump);
     }
-    void PlayerSe2()
+    void PlayerSe2() //障害物に当たったら効果音を鳴らす
     {
         SoundManager.Instance.PlaySE(SEType.Obstacle);
     }

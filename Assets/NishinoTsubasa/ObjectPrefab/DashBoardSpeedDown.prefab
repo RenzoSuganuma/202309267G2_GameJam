@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 9010547866802218618}
   - component: {fileID: 9010547866802218623}
   m_Layer: 0
-  m_Name: DashBoard
+  m_Name: DashBoardSpeedDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
