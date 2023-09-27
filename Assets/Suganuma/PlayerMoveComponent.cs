@@ -138,6 +138,7 @@ public class PlayerMoveComponent : MonoBehaviour
         else//自動スナップ処理
         {
             this.transform.position = _snapPointTr.position;
+            _snapPointTr = null;
             SetPlayerMovementSpeed(15);
         }
         //SoundManager.Instance.PlaySE(SEType.Jump);
@@ -304,6 +305,7 @@ public class PlayerMoveComponent : MonoBehaviour
                 {
                     _canSnapText.text = "";
                     _canSnapNow = false;
+                    _snapPointTr = null;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
                     break;
