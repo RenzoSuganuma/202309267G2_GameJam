@@ -59,7 +59,7 @@ MonoBehaviour:
   - _seType: 2
     _seClip: {fileID: 8300000, guid: e85399b9ea7ada347b0b8d626839d899, type: 3}
   - _seType: 3
-    _seClip: {fileID: 8300000, guid: 84d7b334a1c3168409202651c214995a, type: 3}
+    _seClip: {fileID: 8300000, guid: 237a342186a516f4e9124972393a19be, type: 3}
   - _seType: 4
     _seClip: {fileID: 8300000, guid: 6aadb05cd7a51894ea69b35e31a2388d, type: 3}
   - _seType: 5
@@ -70,3 +70,5 @@ MonoBehaviour:
     _seClip: {fileID: 8300000, guid: fbddb22ae5b1c7448be7f0ac212c48a8, type: 3}
   - _seType: 8
     _seClip: {fileID: 8300000, guid: 9bd6a95490096ce448f93473793adbae, type: 3}
+  - _seType: 9
+    _seClip: {fileID: 8300000, guid: 9e1a0cd40c66a3b4da3afd4209322e3c, type: 3}
