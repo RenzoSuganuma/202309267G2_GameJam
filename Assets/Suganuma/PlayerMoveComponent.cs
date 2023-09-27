@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,8 @@ public class PlayerMoveComponent : MonoBehaviour
     Vector2 _input = Vector2.zero;
     /// <summary>硬直フラグ</summary>
     bool _isFreez = false;
+    /// <summary>障害物などにあたって減速するときのイベント</summary>
+    public event Action CollidedEvent = () => { Debug.Log("衝突イベント！"); };
     private void OnEnable()
     {
         _playerInput = GetComponent<PlayerInputhandlerComponent>();
@@ -159,6 +162,7 @@ public class PlayerMoveComponent : MonoBehaviour
         _isFreez = true;
         this.transform.position += new Vector3(0, 0, -5);
         _rb.velocity = Vector3.zero;
+        CollidedEvent();//イベント呼び出し
         yield return new WaitForSeconds(freezTime);
         _isFreez = false;
     }
