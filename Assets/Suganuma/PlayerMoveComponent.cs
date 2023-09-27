@@ -312,21 +312,4 @@ public class PlayerMoveComponent : MonoBehaviour
                 }
         }
     }
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 100, 100, 100), "SPEEDUP!"))
-        {
-            AddPlayerMovementSpeed(100);
-        }
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Collided!"))
-        {
-            StartCoroutine(CollidedWithObstacleRoutine(1));
-        }
-        if (GUI.Button(new Rect(0, 300, 100, 100), "Falled!"))
-        {
-            DecrementPlayerLife();
-        }
-        GUI.Box(new Rect(0, 0, 300, 100), $"プレイヤー速度{_rb.velocity.z}" +
-            $"\nカメラオフセット{_camOffset.ToString()}");
-    }
 }
