@@ -24,7 +24,12 @@ public class StageRestart : MonoBehaviour
             if (player.PlayerLife == 0)
             {
                 GameManager.Instance.GameFinish(StageResult.Failed);
-                Fade.Instance.RegisterFadeOutEvent(new Action[] { () => ResultManager.Instance.Failed() });
+                Fade.Instance.RegisterFadeOutEvent(
+                    new Action[]
+                    {
+                        () => SoundManager.Instance.PlaySE(SEType.GameOver),
+                        () => ResultManager.Instance.Failed()
+                    });
                 Fade.Instance.StartFadeOut();
                 return;
             }

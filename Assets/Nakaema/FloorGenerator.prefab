@@ -49,9 +49,9 @@ MonoBehaviour:
   _scrollBlockObject: {fileID: 527680149988619661, guid: fa2830d9647f6db4eb4ac3b1ad31f902, type: 3}
   _blankobject: {fileID: 527680149988619661, guid: 1f75205a5911bfc4db3087176f9443cf, type: 3}
   _blockPopPoint: {fileID: 6913661592532092613}
-  _blockMoveForward: {x: 0, y: 0, z: -0.01}
+  _blockMoveForward: {x: 0, y: 0, z: -0.1}
   before_block_create_count: 20
-  _dobonRate: 10
+  _dobonRate: 20
 --- !u!114 &6913661592532092615
 MonoBehaviour:
   m_ObjectHideFlags: 0
