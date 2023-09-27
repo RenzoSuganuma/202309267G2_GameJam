@@ -130,14 +130,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 10
   _jumpForce: 10
-  _movementSpeedLimit: 100
-  _respawnedPlayerSpeed: 0
+  _movementSpeedLimit: 10
+  _respawnedPlayerSpeed: 15
   _mainCamTr: {fileID: 0}
-  _camOffset: {x: 0, y: 5, z: -10}
-  _spawnOffset: {x: 0, y: 0, z: 0}
+  _camOffset: {x: 0, y: 5, z: -5}
+  _spawnOffset: {x: 0, y: 0, z: -1}
   _playerLifePoint: 3
   _lifeCountText: {fileID: 0}
   _canSnapText: {fileID: 0}
+  _spawnPoint: {fileID: 0}
 --- !u!114 &5112515586090276171
 MonoBehaviour:
   m_ObjectHideFlags: 0
