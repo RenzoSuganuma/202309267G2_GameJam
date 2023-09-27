@@ -12,8 +12,9 @@ public class obstacle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _collider.isTrigger = true;
+        _collider = GetComponent<BoxCollider>();
         _move = gameObject.AddComponent<PlayerMoveComponent>();
+        _collider.isTrigger = true;
     }
 
     private void OnEnable()
@@ -38,7 +39,7 @@ public class obstacle : MonoBehaviour
 
     void bgm()
     {
-        SoundManager.Instance.PlaySE(SEType.Obstacle);
+        //SoundManager.Instance.PlaySE(SEType.Obstacle);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -47,7 +48,7 @@ public class obstacle : MonoBehaviour
         {
             if (other.gameObject.TryGetComponent(out PlayerMoveComponent playerMove))
             {
-
+                SoundManager.Instance.PlaySE(SEType.Obstacle);
             }
         }
     }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Constants;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null && SceneManager.GetActiveScene().name == Consts.Scenes[SceneNames.InGame])
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -33,7 +31,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _isPause = true;
-        _uiManager.Init();
+        SoundManager.Instance.PlayBGM(BGMType.InGameBGM, true);
     }
 
     private void Update()
@@ -67,9 +65,9 @@ public class GameManager : MonoBehaviour
             if (i == 0)
             {
                 _uiManager.CountDownText.text = "すたーと！！";
-                _isPause = false;
                 yield return new WaitForSeconds(1f);
                 _uiManager.CountDownText.text = "";
+                _isPause = false;
                 yield break;
             }
 

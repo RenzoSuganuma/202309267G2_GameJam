@@ -1,7 +1,5 @@
-﻿using Constants;
-using System;
+﻿using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ResultManager : MonoBehaviour
@@ -23,7 +21,7 @@ public class ResultManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null && SceneManager.GetActiveScene().name == Consts.Scenes[SceneNames.InGame])
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);

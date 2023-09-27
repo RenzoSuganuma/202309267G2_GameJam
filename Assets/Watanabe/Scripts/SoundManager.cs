@@ -53,7 +53,7 @@ public class SoundManager
     /// <summary> BGM再生 </summary>
     /// <param name="bgm"> どのBGMか </param>
     /// <param name="isLoop"> ループ再生するか </param>
-    public void PlayBGM(BGMType bgm, bool isLoop)
+    public void PlayBGM(BGMType bgm, bool isLoop = false)
     {
         var index = 0;
         foreach (var clip in _soundHolder.BGMClips)
@@ -90,6 +90,9 @@ public class SoundManager
             _seSource.PlayOneShot(next);
         }
     }
+
+    /// <summary> 再生中のBGMの再生を止める </summary>
+    public void CancelBGM() { _bgmSource.Stop(); }
 
     #region 以下Audio系パラメーター設定用の関数
     /// <summary> BGMの音量設定 </summary>
