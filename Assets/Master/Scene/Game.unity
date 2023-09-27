@@ -123,6 +123,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &116676134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 116676135}
+  m_Layer: 0
+  m_Name: RespawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &116676135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116676134}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.06, y: 5.68, z: 2.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &325745415 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5346375322231253023, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
+  m_PrefabInstance: {fileID: 800482502}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &325745423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325745415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce136f9849e99494c811d540be68d9e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &412701421 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 412701421, guid: 63f6912c4cf19114dba4d049d1e9a4b9, type: 3}
@@ -464,6 +512,10 @@ PrefabInstance:
       propertyPath: _mainCamTr
       value: 
       objectReference: {fileID: 454316113}
+    - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
+      propertyPath: _spawnPoint
+      value: 
+      objectReference: {fileID: 116676135}
     - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
       propertyPath: _camOffset.z
       value: -5
@@ -1112,11 +1164,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1697052781}
-  - component: {fileID: 1697052782}
   - component: {fileID: 1697052783}
+  - component: {fileID: 1697052784}
   m_Layer: 0
   m_Name: FloorDobon
-  m_TagString: Untagged
+  m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1129,25 +1181,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1697052780}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalPosition: {x: 0, y: 0, z: 98.8}
+  m_LocalScale: {x: 200, y: 1, z: 200}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1697052782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1697052780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fac87c7c94e43f4e8c6a9636cb7de52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1697052783
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1161,6 +1201,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1697052784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697052780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fac87c7c94e43f4e8c6a9636cb7de52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1743540165
 PrefabInstance:
   m_ObjectHideFlags: 0

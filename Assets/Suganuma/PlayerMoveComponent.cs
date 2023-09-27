@@ -29,6 +29,8 @@ public class PlayerMoveComponent : MonoBehaviour
     [SerializeField, Header("残機表示UI")] Text _lifeCountText;
     /// <summary>スナップ可能か表示するテキスト</summary>
     [SerializeField, Header("スナップ可能表示UI")] Text _canSnapText;
+    /// <summary>初期スポーン地点の座標</summary>
+    [SerializeField, Header("初期スポーン地点")] Transform _spawnPoint;
     /// <summary>プレイヤーの残機</summary>
     int _playerLife = 0;
     /// <summary>プレイヤー残機プロパティ</summary>
@@ -127,7 +129,7 @@ public class PlayerMoveComponent : MonoBehaviour
     void PlayerJumpSequence()
     {
         //ジャンプ（手動）
-        if (!_canSnapNow)//通常ジャンプ処理
+        if (!_canSnapNow && _isGrounded)//通常ジャンプ処理
         {
             _rb.mass = 1.5f;
             _rb.AddForce(this.transform.up * _jumpForce, ForceMode.Impulse);
@@ -214,6 +216,22 @@ public class PlayerMoveComponent : MonoBehaviour
                     StartCoroutine(CollidedWithObstacleRoutine(1));
                     break;
                 }
+            case "Ground"://接地判定→接地
+                {
+                    _isGrounded = true;
+                    break;
+                }
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "Ground"://接地判定→空中
+                {
+                    _isGrounded = false;
+                    break;
+                }
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -243,9 +261,11 @@ public class PlayerMoveComponent : MonoBehaviour
                     //Debug.Log($"スナップ座標差分{trDis}");
                     break;
                 }
-            case "Ground"://接地判定→接地
+            case "Respawn":
                 {
-                    _isGrounded = true;
+                    _rb.velocity = Vector3.zero;
+                    this.transform.position = _spawnPoint.position;
+                    _rb.Sleep();
                     break;
                 }
         }
@@ -286,11 +306,6 @@ public class PlayerMoveComponent : MonoBehaviour
                     _canSnapNow = false;
                     //this.transform.position = other.transform.position;
                     //Debug.Log($"スナップ座標差分{trDis}");
-                    break;
-                }
-            case "Ground"://接地判定→空中
-                {
-                    _isGrounded = false;
                     break;
                 }
         }
