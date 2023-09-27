@@ -13,7 +13,7 @@ public class ScoreManager
     public void TimeMeasurement() { _timer += Time.deltaTime; }
 
     /// <summary> 最終タイムの設定 </summary>
-    public void ResultSet() { ResultManager.ResultTime = _timer; }
+    public void ResultSet() { ResultManager.Instance.ResultTime = _timer; }
 
     /// <summary> タイム加算 </summary>
     public void TimeAddition(float value) { _timer += value; }
