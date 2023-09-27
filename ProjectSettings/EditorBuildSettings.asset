@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Master/Scene/Title.unity
     guid: f15d98bfa1b50aa40bbac15abaf916b3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Master/Scene/Game.unity
     guid: e76453e742910ea499a767e8d1dc3191
   - enabled: 0
@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Master/Scene/Result.unity
     guid: 4b5ad40770558964c8043d851cdd69b0
+  - enabled: 1
+    path: Assets/Master/Scene/Game 1.unity
+    guid: ae9688e9f54af3446b9db4ad66708cb7
   m_configObjects: {}

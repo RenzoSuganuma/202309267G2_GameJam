@@ -9,7 +9,7 @@ namespace Constants
         {
             [SceneNames.Title] = "Title",
             [SceneNames.Home] = "Home",
-            [SceneNames.InGame] = "Game",
+            [SceneNames.InGame] = "Game 1",
             [SceneNames.Result] = "Result"
         };
     }

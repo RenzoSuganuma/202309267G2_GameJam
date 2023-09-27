@@ -89,7 +89,6 @@ public class PlayerMoveComponent : MonoBehaviour
 
         PlayerAutoMoveSequence();
         PlayerCamContSequence();
-        PlayerLifeDisplaySequence();
         PlayerHoveringSequence();
     }
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
@@ -174,6 +173,7 @@ public class PlayerMoveComponent : MonoBehaviour
     {
         //残機を１減らす
         _playerLife--;
+        PlayerLifeDisplaySequence();
     }
     /// <summary>プレイヤーの座標を落下前から少し後に戻す</summary>
     public void ReturnCoordinate()

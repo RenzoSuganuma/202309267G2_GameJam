@@ -43,14 +43,14 @@ public class ResultManager : MonoBehaviour
 
     public void Clear()
     {
-        FadeSetting();
         if (_gameClearPanel) { _gameClearPanel.gameObject.SetActive(true); }
+        FadeSetting();
     }
 
     public void Failed()
     {
-        FadeSetting();
         if (_gameOverPanel) { _gameOverPanel.gameObject.SetActive(true); }
+        FadeSetting();
     }
 
     private void FadeSetting()
