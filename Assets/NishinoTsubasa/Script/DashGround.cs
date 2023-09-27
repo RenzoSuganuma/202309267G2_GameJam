@@ -5,12 +5,12 @@ public class DashGround : MonoBehaviour
     [Header("加えるスピードの値")]
     [SerializeField, Tooltip("変化するスピードの値")] float _addSpeedValue = 0;//スピードの値に変化を加える
     [SerializeField] float _interval = 1f;
-    BoxCollider2D _collider;
+    BoxCollider _collider;
     float _timer;
     bool _colliderSwich = false;//コライダーに複数回触れれないようにboolで管理する
     void Start()
     {
-        _collider = GetComponent<BoxCollider2D>();
+        _collider = GetComponent<BoxCollider>();
         _collider.isTrigger = true;
     }
     void Update()

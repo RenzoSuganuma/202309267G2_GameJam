@@ -17,15 +17,6 @@ public class obstacle : MonoBehaviour
         _collider.isTrigger = true;
     }
 
-    private void OnEnable()
-    {
-        _move.CollidedEvent += bgm;
-    }
-    private void OnDisable()
-    {
-        _move.CollidedEvent -= bgm;
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -48,7 +39,7 @@ public class obstacle : MonoBehaviour
         {
             if (other.gameObject.TryGetComponent(out PlayerMoveComponent playerMove))
             {
-                SoundManager.Instance.PlaySE(SEType.Obstacle);
+                //SoundManager.Instance.PlaySE(SEType.Obstacle);
             }
         }
     }
