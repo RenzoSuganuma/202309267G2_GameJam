@@ -12,6 +12,7 @@ public class StageClear : MonoBehaviour
             Fade.Instance.RegisterFadeOutEvent(
                 new Action[]
                 {
+                    () => SoundManager.Instance.CancelBGM(),
                     () => SoundManager.Instance.PlaySE(SEType.GameClear),
                     () => ResultManager.Instance.Clear()
                 });

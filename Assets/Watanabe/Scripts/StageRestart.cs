@@ -27,6 +27,7 @@ public class StageRestart : MonoBehaviour
                 Fade.Instance.RegisterFadeOutEvent(
                     new Action[]
                     {
+                        () => SoundManager.Instance.CancelBGM(),
                         () => SoundManager.Instance.PlaySE(SEType.GameOver),
                         () => ResultManager.Instance.Failed()
                     });
