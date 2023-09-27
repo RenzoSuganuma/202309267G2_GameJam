@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     private readonly ScoreManager _scoreManager = new();
     private StageResult _result = StageResult.None;
 
-    private bool _isPause = false;
+    private bool _isPause = true;
 
     public bool IsPause => _isPause;
     public static GameManager Instance { get; private set; }
@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _isPause = true;
         SoundManager.Instance.PlayBGM(BGMType.InGameBGM, true);
     }
 
@@ -39,8 +38,6 @@ public class GameManager : MonoBehaviour
         if (_result != StageResult.None)
         {
             _scoreManager.ResultSet();
-            Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Result) });
-            Fade.Instance.StartFadeOut();
             return;
         }
 

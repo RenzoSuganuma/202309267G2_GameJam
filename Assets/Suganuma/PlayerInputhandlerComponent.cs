@@ -11,6 +11,8 @@ public class PlayerInputhandlerComponent : MonoBehaviour
     public event Action JumpEvent = ()=> { Debug.Log("ƒWƒƒƒ“ƒv“ü—Í“ü‚Á‚½"); };
     private void Update()
     {
+        if (GameManager.Instance.IsPause) { return; }
+
         //WASD“ü—Í
         _moveInput.x = Input.GetAxis("Horizontal");
         _moveInput.y = Input.GetAxis("Vertical");
