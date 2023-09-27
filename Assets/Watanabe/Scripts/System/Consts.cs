@@ -44,6 +44,7 @@ public enum SEType
     GameOver,
     Fall,
     CountDown,
+    Obstacle,
 }
 
 public enum StageResult
