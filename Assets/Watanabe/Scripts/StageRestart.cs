@@ -14,6 +14,7 @@ public class StageRestart : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out PlayerMoveComponent player))
         {
+            SoundManager.Instance.PlaySE(SEType.Fall);
             //一時停止する
             _gameManager.ChangePauseStatus(true);
             //playerの残機を減らす
