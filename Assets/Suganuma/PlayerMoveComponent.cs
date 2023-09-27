@@ -185,6 +185,8 @@ public class PlayerMoveComponent : MonoBehaviour
             case "Dobon"://ドボン→落下したとき
                 {
                     //プレイヤー死亡処理←ゲームマネージャーのメソッドを参照
+                    Debug.Log("ドボン！落下した！");
+                    _mainCamTr.SetParent(null);
                     break;
                 }
             case "SnapPoint"://スナップポイント可能範囲にいるとき
