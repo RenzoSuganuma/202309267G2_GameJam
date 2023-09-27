@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PlayerInputhandlerComponent))]
 /// <summary>プレイヤーの動くためのコンポーネント</summary>
@@ -22,6 +25,8 @@ public class PlayerMoveComponent : MonoBehaviour
     [SerializeField, Header("再スポーン時のオフセット")] Vector3 _spawnOffset;
     /// <summary>プレイヤー残機初期値</summary>
     [SerializeField,Header("プレイヤー残機初期値")] int _playerLifePoint;
+    /// <summary>プレイヤーの残機カウントのテキスト</summary>
+    [SerializeField,Header("残機表示UI")] Text _lifeCountText;
     /// <summary>プレイヤーの残機</summary>
     int _playerLife = 0;
     /// <summary>プレイヤー残機プロパティ</summary>
@@ -36,6 +41,8 @@ public class PlayerMoveComponent : MonoBehaviour
     Vector2 _input = Vector2.zero;
     /// <summary>硬直フラグ</summary>
     bool _isFreez = false;
+    /// <summary>障害物などにあたって減速するときのイベント</summary>
+    public event Action CollidedEvent = () => { Debug.Log("衝突イベント！"); };
     private void OnEnable()
     {
         _playerInput = GetComponent<PlayerInputhandlerComponent>();
@@ -66,14 +73,13 @@ public class PlayerMoveComponent : MonoBehaviour
     {
         PlayerAutoMoveSequence();
         PlayerCamContSequence();
+        PlayerLifeDisplaySequence();
     }
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
     void PlayerAutoMoveSequence()
     {
         if (!_isFreez)//硬直フラグがたってないなら
         {
-
-
             //正面移動 （自動）
             _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
             if (_rb.velocity.z > _movementSpeedLimit)
@@ -88,6 +94,7 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private void SetPlayerMovementSpeed(float speed)
     {
+        //Z軸方向だけ速度を変更
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, speed);
         _rb.velocity = v;
     }
@@ -109,10 +116,16 @@ public class PlayerMoveComponent : MonoBehaviour
         //オフセットかける
         _mainCamTr.localPosition = _camOffset;
     }
+    void PlayerLifeDisplaySequence()
+    {
+        //UIのTextに文字列の格納
+        _lifeCountText.text = $"×{_playerLife}";
+    }
     /// <summary>スピードの加算メソッド</summary>
     /// <param name="speed"></param>
     public void AddPlayerMovementSpeed(float speed)
     {
+        //速度上限を増やす
         _movementSpeedLimit += speed;
         //スピードアップ処理
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, _movementSpeedLimit);
@@ -149,6 +162,7 @@ public class PlayerMoveComponent : MonoBehaviour
         _isFreez = true;
         this.transform.position += new Vector3(0, 0, -5);
         _rb.velocity = Vector3.zero;
+        CollidedEvent();//イベント呼び出し
         yield return new WaitForSeconds(freezTime);
         _isFreez = false;
     }
@@ -161,6 +175,10 @@ public class PlayerMoveComponent : MonoBehaviour
         if (GUI.Button(new Rect(0, 200, 100, 100), "Collided!"))
         {
             StartCoroutine(CollidedWithObstacleRoutine(1));
+        }
+        if (GUI.Button(new Rect(0, 300, 100, 100), "Falled!"))
+        {
+            DecrementPlayerLife();
         }
         GUI.Box(new Rect(0, 0, 300, 100), $"プレイヤー速度{_rb.velocity.z}" +
             $"\nカメラオフセット{_camOffset.ToString()}");
