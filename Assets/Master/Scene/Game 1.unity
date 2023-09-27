@@ -550,10 +550,6 @@ PrefabInstance:
       value: 2.046
       objectReference: {fileID: 0}
     - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: _jumpForce
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
       propertyPath: _mainCamTr
       value: 
       objectReference: {fileID: 454316113}
@@ -562,10 +558,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1420005599}
     - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: _camOffset.z
-      value: -5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
       propertyPath: _canSnapText
       value: 
       objectReference: {fileID: 109402042}
@@ -573,30 +565,6 @@ PrefabInstance:
       propertyPath: _lifeCountText
       value: 
       objectReference: {fileID: 1502279717}
-    - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: _spawnOffset.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: _spawnOffset.z
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: _movementSpeedLimit
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5112515586090276168, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: _respawnedPlayerSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5112515586090276170, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5112515586090276170, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5346375322231253023, guid: a860b9ffb72eba141b128421f0817dc5, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
@@ -673,10 +641,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6521788459805652784, guid: eaed86a782271b04ab6b40bfe3f30300, type: 3}
       propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6521788459805652784, guid: eaed86a782271b04ab6b40bfe3f30300, type: 3}
-      propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6521788459805652784, guid: eaed86a782271b04ab6b40bfe3f30300, type: 3}
@@ -1569,10 +1533,6 @@ PrefabInstance:
     - target: {fileID: 2946438560716446250, guid: b6f1a82f8210288429394bac555d6921, type: 3}
       propertyPath: m_RootOrder
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2946438560716446250, guid: b6f1a82f8210288429394bac555d6921, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 3.349701
       objectReference: {fileID: 0}
     - target: {fileID: 2946438560716446250, guid: b6f1a82f8210288429394bac555d6921, type: 3}
       propertyPath: m_LocalPosition.x
