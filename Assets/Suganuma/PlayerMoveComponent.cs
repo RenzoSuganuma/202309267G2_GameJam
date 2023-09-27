@@ -247,7 +247,9 @@ public class PlayerMoveComponent : MonoBehaviour
                     _rb.Sleep();
                     //À•W‚Ì‹L˜^
                     _dobonPointTr = new Vector3(
-                        other.gameObject.transform.GetChild(0).gameObject.transform.position.x,
+                        other.gameObject.transform.childCount > 0 ? 
+                        other.gameObject.transform.GetChild(0).gameObject.transform.position.x :
+                        other.gameObject.transform.position.x,
                         6f,
                         gameObject.transform.position.z);
                     //_mainCamTr.SetParent(null);
