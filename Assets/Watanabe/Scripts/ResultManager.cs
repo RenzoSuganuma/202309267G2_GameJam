@@ -10,19 +10,15 @@ public class ResultManager : MonoBehaviour
     [SerializeField]
     private Text _resultTimeText = default;
     [SerializeField]
-    private Button _toTitleButton = default;
-    [SerializeField]
-    private Image _clearPanel = default;
-    [SerializeField]
-    private Image _failedPanel = default;
+    private Button[] _toTitleButton = default;
     [SerializeField]
     private Image _gameClearPanel = default;
     [SerializeField]
     private Image _gameOverPanel = default;
 
-    private static float _resultTime = 0f;
+    private float _resultTime = 0f;
 
-    public static float ResultTime { get => _resultTime; set => _resultTime = value; }
+    public float ResultTime { get => _resultTime; set => _resultTime = value; }
     public static ResultManager Instance { get; private set; }
 
     private void Awake()
@@ -39,9 +35,6 @@ public class ResultManager : MonoBehaviour
     {
         PanelReset();
         _resultTimeText.text = _resultTime.ToString("F2");
-
-        Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.Title) });
-        _toTitleButton.onClick.AddListener(() => Fade.Instance.StartFadeOut());
     }
 
     private void PanelReset()
@@ -52,11 +45,19 @@ public class ResultManager : MonoBehaviour
 
     public void Clear()
     {
+        FadeSetting();
         if (_gameClearPanel) { _gameClearPanel.gameObject.SetActive(true); }
     }
 
     public void Failed()
     {
+        FadeSetting();
         if (_gameOverPanel) { _gameOverPanel.gameObject.SetActive(true); }
+    }
+
+    private void FadeSetting()
+    {
+        Fade.Instance.RegisterFadeOutEvent(new Action[] { () => SceneLoader.LoadToScene(SceneNames.InGame) });
+        foreach (var button in _toTitleButton) { button.onClick.AddListener(() => Fade.Instance.StartFadeOut()); }
     }
 }
