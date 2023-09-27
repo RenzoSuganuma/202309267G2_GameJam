@@ -37,5 +37,20 @@ public enum SEType
 {
     None,
     ItemGet,
+    Jump,
+    SpeedUp,
+    SpeedDown,
+    GameClear,
+    GameOver,
+    Fall,
+    CountDown,
+    Obstacle,
+}
+
+public enum StageResult
+{
+    None,
+    Clear,
+    Failed,
 }
 #endregion
