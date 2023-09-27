@@ -24,9 +24,11 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>再スポーン時の座標オフセット</summary>
     [SerializeField, Header("再スポーン時のオフセット")] Vector3 _spawnOffset;
     /// <summary>プレイヤー残機初期値</summary>
-    [SerializeField,Header("プレイヤー残機初期値")] int _playerLifePoint;
+    [SerializeField, Header("プレイヤー残機初期値")] int _playerLifePoint;
     /// <summary>プレイヤーの残機カウントのテキスト</summary>
-    [SerializeField,Header("残機表示UI")] Text _lifeCountText;
+    [SerializeField, Header("残機表示UI")] Text _lifeCountText;
+    /// <summary>スナップ可能か表示するテキスト</summary>
+    [SerializeField, Header("スナップ可能表示UI")] Text _canSnapText;
     /// <summary>プレイヤーの残機</summary>
     int _playerLife = 0;
     /// <summary>プレイヤー残機プロパティ</summary>
@@ -43,6 +45,12 @@ public class PlayerMoveComponent : MonoBehaviour
     bool _isFreez = false;
     /// <summary>障害物などにあたって減速するときのイベント</summary>
     public event Action CollidedEvent = () => { Debug.Log("衝突イベント！"); };
+    /// <summary>スナップ可能フラグ</summary>
+    bool _canSnapNow = false;
+    /// <summary>スナップポイントの座標</summary>
+    Transform _snapPointTr;
+    /// <summary>ゲームマネージャー</summary>
+    GameManager _gmanager;
     private void OnEnable()
     {
         _playerInput = GetComponent<PlayerInputhandlerComponent>();
@@ -62,6 +70,8 @@ public class PlayerMoveComponent : MonoBehaviour
         _rb.freezeRotation = true;
         //プレイヤー残機プロパティ初期化
         _playerLife = _playerLifePoint;
+        //ゲームマネージャー取得
+        _gmanager = GameObject.FindFirstObjectByType<GameManager>();
     }
     private void Update()
     {
@@ -78,7 +88,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
     void PlayerAutoMoveSequence()
     {
-        if (!_isFreez)//硬直フラグがたってないなら
+        if (!_isFreez /*&& !_gmanager.IsPause*/)//硬直フラグがたってないなら
         {
             //正面移動 （自動）
             _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
@@ -94,6 +104,7 @@ public class PlayerMoveComponent : MonoBehaviour
 
     private void SetPlayerMovementSpeed(float speed)
     {
+        Debug.Log("プレイヤー速度セット");
         //Z軸方向だけ速度を変更
         var v = new Vector3(_rb.velocity.x, _rb.velocity.y, speed);
         _rb.velocity = v;
@@ -103,8 +114,16 @@ public class PlayerMoveComponent : MonoBehaviour
     void PlayerJumpSequence()
     {
         //ジャンプ（手動）
-        _rb.AddForce(this.transform.up * _jumpForce, ForceMode.Impulse);
-        SoundManager.Instance.PlaySE(SEType.Jump);
+        if (!_canSnapNow)//通常ジャンプ処理
+        {
+            _rb.AddForce(this.transform.up * _jumpForce, ForceMode.Impulse);
+        }
+        else//自動スナップ処理
+        {
+            this.transform.position = _snapPointTr.position;
+            SetPlayerMovementSpeed(15);
+        }
+        //SoundManager.Instance.PlaySE(SEType.Jump);
     }
     /// <summary>カメラ操作シーケンス</summary>
     void PlayerCamContSequence()
@@ -151,6 +170,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤーの移動速度を初期化</summary>
     public void ResetPlayerMovementSpeed()
     {
+        Debug.Log("プレイヤー速度リセット");
         SetPlayerMovementSpeed(_respawnedPlayerSpeed);
     }
     /// <summary>硬直＋減速ルーチン</summary>
@@ -165,6 +185,71 @@ public class PlayerMoveComponent : MonoBehaviour
         CollidedEvent();//イベント呼び出し
         yield return new WaitForSeconds(freezTime);
         _isFreez = false;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        switch (other.tag)
+        {
+            case "Dobon"://ドボン→落下したとき
+                {
+                    //プレイヤー死亡処理←ゲームマネージャーのメソッドを参照
+                    Debug.Log("ドボン！落下した！");
+                    _mainCamTr.SetParent(null);
+                    break;
+                }
+            case "SnapPoint"://スナップポイント可能範囲にいるとき
+                {
+                    _canSnapText.text = "スナップ！";//テキスト表示
+                    //座標差分算出
+                    var trDis = other.gameObject.transform.position.x - this.transform.position.x;
+                    //スナップ可能フラグを立てる
+                    _canSnapNow = true;
+                    //座標代入
+                    _snapPointTr = other.transform;
+                    //this.transform.position = other.transform.position;
+                    //Debug.Log($"スナップ座標差分{trDis}");
+                    break;
+                }
+            case "Obstacle":
+                {
+                    //硬直ルーチン
+                    StartCoroutine(CollidedWithObstacleRoutine(1));
+                    break;
+                }
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        switch (other.tag)
+        {
+            case "SnapPoint"://スナップポイント可能範囲にいるとき
+                {
+                    _canSnapText.text = "スナップ！";//テキスト表示
+                    //座標差分算出
+                    var trDis = other.gameObject.transform.position.x - this.transform.position.x;
+                    //スナップ可能フラグを立てる
+                    _canSnapNow = true;
+                    //座標代入
+                    _snapPointTr = other.transform;
+                    //this.transform.position = other.transform.position;
+                    //Debug.Log($"スナップ座標差分{trDis}");
+                    break;
+                }
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        switch (other.tag)
+        {
+            case "SnapPoint"://スナップポイント可能範囲にいるとき
+                {
+                    _canSnapText.text = "";
+                    _canSnapNow = false;
+                    //this.transform.position = other.transform.position;
+                    //Debug.Log($"スナップ座標差分{trDis}");
+                    break;
+                }
+        }
     }
     private void OnGUI()
     {
