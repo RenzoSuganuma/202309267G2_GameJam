@@ -3,20 +3,13 @@ using UnityEngine;
 
 public class StageRestart : MonoBehaviour
 {
-    private GameManager _gameManager = default;
-
-    private void Start()
-    {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out PlayerMoveComponent player))
         {
             SoundManager.Instance.PlaySE(SEType.Fall);
             //一時停止する
-            _gameManager.ChangePauseStatus(true);
+            GameManager.Instance.ChangePauseStatus(true);
             //playerの残機を減らす
             player.DecrementPlayerLife();
 
@@ -36,17 +29,14 @@ public class StageRestart : MonoBehaviour
             }
 
             //落下時にPlayerの位置を調整し、やり直し
+            Fade.Instance.RegisterFadeInEvent(new Action[] { () => GameManager.Instance.ChangePauseStatus(false) });
             Fade.Instance.RegisterFadeOutEvent(
                 new Action[]
                 {
                     () => player.ReturnCoordinate(),
-                    () => player.ReturnCoordinate()
+                    () => Fade.Instance.StartFadeIn()
                 });
             Fade.Instance.StartFadeOut();
-
-            //フェードが終わったら再開する
-            Fade.Instance.RegisterFadeInEvent(new Action[] { () => _gameManager.ChangePauseStatus(false) });
-            Fade.Instance.StartFadeIn();
         }
     }
 }

@@ -25,6 +25,7 @@ public class DashGround : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+
         if (_colliderSwich != true)
         {
             if (other.gameObject.TryGetComponent(out PlayerMoveComponent playerMove))//触れたらスピードの値を変える
