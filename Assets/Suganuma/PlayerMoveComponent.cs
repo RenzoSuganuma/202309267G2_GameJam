@@ -47,7 +47,10 @@ public class PlayerMoveComponent : MonoBehaviour
     public event Action CollidedEvent = () => { Debug.Log("衝突イベント！"); };
     /// <summary>スナップ可能フラグ</summary>
     bool _canSnapNow = false;
+    /// <summary>スナップポイントの座標</summary>
     Transform _snapPointTr;
+    /// <summary>ゲームマネージャー</summary>
+    GameManager _gmanager;
     private void OnEnable()
     {
         _playerInput = GetComponent<PlayerInputhandlerComponent>();
@@ -67,6 +70,8 @@ public class PlayerMoveComponent : MonoBehaviour
         _rb.freezeRotation = true;
         //プレイヤー残機プロパティ初期化
         _playerLife = _playerLifePoint;
+        //ゲームマネージャー取得
+        _gmanager = GameObject.FindFirstObjectByType<GameManager>();
     }
     private void Update()
     {
@@ -83,7 +88,7 @@ public class PlayerMoveComponent : MonoBehaviour
     /// <summary>プレイヤー自動移動と左右移動シーケンス</summary>
     void PlayerAutoMoveSequence()
     {
-        if (!_isFreez)//硬直フラグがたってないなら
+        if (!_isFreez /*&& !_gmanager.IsPause*/)//硬直フラグがたってないなら
         {
             //正面移動 （自動）
             _rb.AddForce(this.transform.forward * _moveSpeed, ForceMode.Force);
@@ -115,6 +120,7 @@ public class PlayerMoveComponent : MonoBehaviour
         else//自動スナップ処理
         {
            this.transform.position = _snapPointTr.position;
+            SetPlayerMovementSpeed(30);
         }
         SoundManager.Instance.PlaySE(SEType.Jump);
     }
