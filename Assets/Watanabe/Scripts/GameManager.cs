@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     private bool _isPause = false;
 
+    public bool IsPause => _isPause;
     public static GameManager Instance { get; private set; }
 
     private void Awake()
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _isPause = true;
-        StartCoroutine(CountDown());
+        _uiManager.Init();
     }
 
     private void Update()
@@ -52,9 +53,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void GameStart()
+    {
+        StartCoroutine(CountDown());
+    }
+
     /// <summary> ゲーム開始時のカウントダウン </summary>
     private IEnumerator CountDown()
     {
+        SoundManager.Instance.PlaySE(SEType.CountDown);
         for (int i = _countDownTime; i >= 0; i--)
         {
             if (i == 0)
