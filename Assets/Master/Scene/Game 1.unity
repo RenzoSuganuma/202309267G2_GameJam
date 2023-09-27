@@ -1151,26 +1151,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1829951735}
-    - target: {fileID: 8500054379188706450, guid: 4aa1da7eea642fa4f898b7decc4c8eda, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8500054379599578776, guid: 4aa1da7eea642fa4f898b7decc4c8eda, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8500054379599578778, guid: 4aa1da7eea642fa4f898b7decc4c8eda, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8500054379599578778, guid: 4aa1da7eea642fa4f898b7decc4c8eda, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 187de12832bc3954b90fa41232e080f5, type: 3}
-    - target: {fileID: 8500054379599578778, guid: 4aa1da7eea642fa4f898b7decc4c8eda, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8500054380341118196, guid: 4aa1da7eea642fa4f898b7decc4c8eda, type: 3}
       propertyPath: m_Name
       value: InGameCanvas
